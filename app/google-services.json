@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1085917809673",
+    "project_id": "share-post-project",
+    "storage_bucket": "share-post-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085917809673:android:84e101d1b13fba5898bcd8",
+        "android_client_info": {
+          "package_name": "thud.chiasebaiviet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1085917809673-htc5jmnv5cv5b1kela7mron6e8pjfqn5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4LLzwBVp_zPvblfSdf3jgvN_D6PUuy2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1085917809673-htc5jmnv5cv5b1kela7mron6e8pjfqn5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
