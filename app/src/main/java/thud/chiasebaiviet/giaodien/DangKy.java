@@ -24,7 +24,7 @@ public class DangKy extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dangky);
-
+        firebaseHelper = new FirebaseHelper();
         // Ánh xạ các thành phần giao diện
         layoutTaiKhoan = findViewById(R.id.layout_taikhoan);
         layoutHoTen = findViewById(R.id.layout_hoten);
@@ -35,71 +35,83 @@ public class DangKy extends AppCompatActivity {
         edtMatKhau = findViewById(R.id.edt_matkhau);
         edtNhapLaiMatKhau = findViewById(R.id.edt_xacnhanmatkhau);
     }
-    public void KiemTraDangKy(View view){
-        firebaseHelper = new FirebaseHelper();
-        // Lấy thông tin người dùng nhập vào
+    public void KiemTraDangKy(View view) {
         String tenDangNhap = edtTenDangNhap.getText().toString().trim();
         String matKhau = edtMatKhau.getText().toString().trim();
         String nhapLaiMatKhau = edtNhapLaiMatKhau.getText().toString().trim();
         String hoTen = edtHoTen.getText().toString().trim();
-        // Kiểm tra thông tin nhập vào có hợp lệ hay không
-        if (tenDangNhap.isEmpty()) {
-            layoutTaiKhoan.setError("Vui lòng nhập tên đăng nhập");
-            edtTenDangNhap.requestFocus();
+
+        if (!KiemTraInput(tenDangNhap, matKhau, nhapLaiMatKhau, hoTen)) {
             return;
-        }else {
+        }
+
+        KiemTraTenDangNhapTonTai(tenDangNhap);
+    }
+
+    private boolean KiemTraInput(String tenDangNhap, String matKhau,
+                                    String nhapLaiMatKhau, String hoTen) {
+        if (tenDangNhap.isEmpty() || tenDangNhap.length() < 6 || tenDangNhap.length() > 10) {
+            layoutTaiKhoan.setError(tenDangNhap.isEmpty() ?
+                    "Vui lòng nhập tên đăng nhập" : "Tên đăng nhập phải từ 6 đến 10 ký tự");
+            edtTenDangNhap.requestFocus();
+            return false;
+        } else {
             layoutTaiKhoan.setError(null);
         }
-        if (hoTen.isEmpty()) {
-            layoutHoTen.setError("Vui lòng nhập họ tên");
+        if (hoTen.isEmpty() || !hoTen.matches("[a-zA-Z ]+")) {
+            layoutHoTen.setError(hoTen.isEmpty() ?
+                    "Vui lòng nhập họ tên" : "Họ tên chỉ được chứa chữ cái và dấu cách");
             edtHoTen.requestFocus();
-            return;
+            return false;
         } else {
             layoutHoTen.setError(null);
         }
-        if (matKhau.isEmpty()) {
-            layoutMatKhau.setError("Vui lòng nhập mật khẩu");
+        if (matKhau.isEmpty() ||
+                !matKhau.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,}$")) {
+            layoutMatKhau.setError(matKhau.isEmpty() ?
+                    "Vui lòng nhập mật khẩu" :
+                    "Mật khẩu phải có ít nhất 5 kí tự và phải có chữ và số");
             edtMatKhau.requestFocus();
-            return;
+            return false;
         } else {
             layoutMatKhau.setError(null);
         }
-        if (nhapLaiMatKhau.isEmpty()) {
-            layoutNhapLaiMatKhau.setError("Vui lòng nhập lại mật khẩu");
+        if (nhapLaiMatKhau.isEmpty() || !matKhau.equals(nhapLaiMatKhau)) {
+            layoutNhapLaiMatKhau.setError(nhapLaiMatKhau.isEmpty() ?
+                    "Vui lòng nhập lại mật khẩu" : "Mật khẩu không khớp");
             edtNhapLaiMatKhau.requestFocus();
-            return;
-        } else if (!matKhau.equals(nhapLaiMatKhau)) {
-            layoutNhapLaiMatKhau.setError("Mật khẩu không khớp");
-            edtNhapLaiMatKhau.requestFocus();
-            return;
+            return false;
         } else {
             layoutNhapLaiMatKhau.setError(null);
         }
-        firebaseHelper.checkTenDangNhapTonTai(tenDangNhap, new FirebaseHelper.OnCheckListener() {
+        return true;
+    }
 
+    private void KiemTraTenDangNhapTonTai(String tenDangNhap) {
+        firebaseHelper.checkTenDangNhapTonTai(tenDangNhap, new FirebaseHelper.OnCheckListener() {
             @Override
             public void onCheck(boolean exists) {
                 if (exists) {
-                    // tenDangNhap đã tồn tại
                     layoutTaiKhoan.setError("Tên đăng nhập đã tồn tại");
                     edtTenDangNhap.requestFocus();
                 } else {
-                    // tenDangNhap chưa tồn tại
                     layoutTaiKhoan.setError(null);
-                    // Nếu thông tin nhập vào hợp lệ, tiến hành đăng ký tài khoản
-                    if (!tenDangNhap.isEmpty() && !matKhau.isEmpty() && !nhapLaiMatKhau.isEmpty()
-                            && !hoTen.isEmpty() && matKhau.equals(nhapLaiMatKhau)) {
-                        String hashedPassword = HashPassword.hash(matKhau);
-                        NguoiDung nguoiDung = new NguoiDung(tenDangNhap, hoTen, hashedPassword);
-                        firebaseHelper.addNguoiDung(nguoiDung);
-                        Intent intent = new Intent(DangKy.this, DangNhap.class);
-                        startActivity(intent);
-                        Toast.makeText(DangKy.this, "Đăng ký tài khoản thành công", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
+                    TienHanhDangKy();
                 }
             }
         });
+    }
+    private void TienHanhDangKy() {
+        String tenDangNhap = edtTenDangNhap.getText().toString().trim();
+        String matKhau = edtMatKhau.getText().toString().trim();
+        String hoTen = edtHoTen.getText().toString().trim();
+        String hashedPassword = HashPassword.hash(matKhau);
+        NguoiDung nguoiDung = new NguoiDung(tenDangNhap, hoTen, hashedPassword);
+        firebaseHelper.addNguoiDung(nguoiDung);
+        Intent intent = new Intent(DangKy.this, DangNhap.class);
+        startActivity(intent);
+        Toast.makeText(DangKy.this, "Đăng ký tài khoản thành công", Toast.LENGTH_SHORT).show();
+        finish();
     }
     @Override
     public void onBackPressed() {

@@ -17,10 +17,12 @@ public class DangNhap extends AppCompatActivity {
     TextInputLayout layoutTaiKhoan, layoutMatKhau;
     TextInputEditText edtTenDangNhap, edtMatKhau;
     String tenDangNhap, matKhau;
+    FirebaseHelper firebaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dangnhap);
+        firebaseHelper = new FirebaseHelper();
         // Ánh xạ các thành phần giao diện
         layoutTaiKhoan = findViewById(R.id.layout_taikhoan);
         layoutMatKhau = findViewById(R.id.layout_matkhau);
@@ -35,7 +37,7 @@ public class DangNhap extends AppCompatActivity {
         // Kiểm tra nếu đã lưu thông tin đăng nhập trong SharedPreferences, tự động đăng nhập
         if (tenDangNhap != null && matKhau != null) {
             //nếu có thông tin đã lưu thì chuyển đến trang chủ
-            xacThucDangNhap();
+            XacThucDangNhap();
         }
     }
 
@@ -57,30 +59,17 @@ public class DangNhap extends AppCompatActivity {
         } else {
             layoutMatKhau.setError(null);
         }
-        // Kiểm tra đăng nhập
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        // Kiểm tra thông tin đăng nhập
+        KiemTraThongTin(tenDangNhap, matKhau);
+    }
+
+    private void KiemTraThongTin(String tenDangNhap, String matKhau) {
         firebaseHelper.ktDangNhap(tenDangNhap, HashPassword.hash(matKhau), new FirebaseHelper.OnCheckListener() {
             @Override
             public void onCheck(boolean exists) {
                 if (exists) {
-                    FirebaseHelper firebaseHelper = new FirebaseHelper();
-                    firebaseHelper.layKeyNguoiDung(tenDangNhap, new FirebaseHelper.OnGetKeySuccessListener() {
-                        @Override
-                        public void onGetKeySuccess(String ten) {
-                            SharedPreferences preferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("idNguoiDung", ten);
-                            editor.putString("tenDangNhap", tenDangNhap);
-                            editor.putString("matKhau", HashPassword.hash(matKhau));
-                            editor.apply();
-                            xacThucDangNhap();
-                        }
-                        @Override
-                        public void onGetKeyFailure(String errorMessage) {
-                            Toast.makeText(DangNhap.this, errorMessage, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
+                    //Nếu đúng thông tin sẽ lưu thông tin vào SharedPreferences
+                    LuuThongTin(tenDangNhap, matKhau);
                 } else {
                     Toast.makeText(DangNhap.this,
                             "Tên đăng nhập hoặc mật khẩu không chính xác",
@@ -89,7 +78,30 @@ public class DangNhap extends AppCompatActivity {
             }
         });
     }
-    private void xacThucDangNhap() {
+
+    private void LuuThongTin(String tenDangNhap, String matKhau) {
+        //lấy ra key của người dùng
+        firebaseHelper.layKeyNguoiDung(tenDangNhap, new FirebaseHelper.OnGetKeySuccessListener() {
+            @Override
+            public void onGetKeySuccess(String key) {
+                //lưu vào SharedPreferences
+                SharedPreferences preferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("idNguoiDung", key);
+                editor.putString("tenDangNhap", tenDangNhap);
+                editor.putString("matKhau", HashPassword.hash(matKhau));
+                editor.apply();
+                //đăng nhập thành công
+                XacThucDangNhap();
+            }
+            @Override
+            public void onGetKeyFailure(String errorMessage) {
+                Toast.makeText(DangNhap.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void XacThucDangNhap() {
         // Chuyển sang màn hình chính
         Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(DangNhap.this, TrangChu.class);

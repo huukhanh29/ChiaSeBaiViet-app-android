@@ -37,7 +37,10 @@ public class CustomGridViewAdapter extends BaseAdapter {
         this.context = context;
         this.baiVietList = baiVietList;
     }
-
+    public void setData(List<BaiViet> baiVietList) {
+        this.baiVietList = baiVietList;
+        notifyDataSetChanged();
+    }
     @Override
     public int getCount() {
         return baiVietList.size();
@@ -79,7 +82,6 @@ public class CustomGridViewAdapter extends BaseAdapter {
             public void onGetTenSuccess(String tenNguoiDung) {
                 holder.textHoTen.setText(tenNguoiDung);
             }
-
             @Override
             public void onGetTenFailure(String errorMessage) {
                 Log.e(TAG, "Error getting tenNguoiDung: " + errorMessage);

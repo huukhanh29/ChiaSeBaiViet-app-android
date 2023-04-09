@@ -5,7 +5,6 @@ public class BaiViet {
     private String noiDung;
     private String image;
     private String idNguoiDung;
-    private Object timestamp;
     public BaiViet() {}
 
     public BaiViet(String maBv, String noiDung, String image, String idNguoiDung) {
@@ -13,14 +12,6 @@ public class BaiViet {
         this.noiDung = noiDung;
         this.image = image;
         this.idNguoiDung = idNguoiDung;
-    }
-
-    public Object getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Object timestamp) {
-        this.timestamp = timestamp;
     }
 
     public String getNoiDung() {

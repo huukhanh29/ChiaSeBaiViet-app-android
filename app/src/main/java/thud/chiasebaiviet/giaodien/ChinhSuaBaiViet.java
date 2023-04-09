@@ -2,7 +2,6 @@ package thud.chiasebaiviet.giaodien;
 
 import static android.content.ContentValues.TAG;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -11,9 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,20 +18,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import thud.chiasebaiviet.dulieu.BaiViet;
 import thud.chiasebaiviet.xuly.FirebaseHelper;
 
-
-public class ChinhSuaBaiViet extends XuLyBaiViet {
+public class ChinhSuaBaiViet extends QuanLyBaiViet {
     private BaiViet baiViet;
     private String keyBv;
     private FirebaseHelper firebaseHelper;
@@ -44,10 +32,14 @@ public class ChinhSuaBaiViet extends XuLyBaiViet {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         btnXoa.setVisibility(View.VISIBLE);
-         //Lấy dữ liệu từ intent
         firebaseHelper = new FirebaseHelper();
+        //Lấy dữ liệu từ intent
         Intent intent = getIntent();
         String maBaiViet = intent.getStringExtra("maBaiViet");
+        //lấy bài viết từ firebase
+        LayBaiViet(maBaiViet);
+    }
+    private void LayBaiViet(String maBaiViet) {
         firebaseHelper.layBaiVietByMaBV(maBaiViet, new FirebaseHelper.OnGetOneBaiViet() {
             @Override
             public void onGetBaiVietSuccess(BaiViet bv) {
@@ -65,7 +57,8 @@ public class ChinhSuaBaiViet extends XuLyBaiViet {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Log.e(TAG, "Error loading image", exception);
+                        Toast.makeText(ChinhSuaBaiViet.this,
+                                "Lấy ảnh thất bại!", Toast.LENGTH_LONG).show();
                     }
                 });
                 firebaseHelper.layKeyBaiViet(baiViet.getMaBv(), new FirebaseHelper.OnGetKeySuccessListener() {
@@ -81,10 +74,11 @@ public class ChinhSuaBaiViet extends XuLyBaiViet {
             }
             @Override
             public void onGetBaiVietFailure(String errorMessage) {
-                Toast.makeText(ChinhSuaBaiViet.this, "Lỗi tìm bài viết bằng mã bài viết!", Toast.LENGTH_LONG).show();
+                Toast.makeText(ChinhSuaBaiViet.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     public void LuuBaiViet(View view) {
         nDung = edtNoidung.getText().toString().trim();
         if (nDung.isEmpty()) {
@@ -143,7 +137,6 @@ public class ChinhSuaBaiViet extends XuLyBaiViet {
         firebaseHelper = new FirebaseHelper();
         firebaseHelper.deleteBaiViet(keyBv);
         // Xóa ảnh trên Firebase Storage
-
         StorageReference anhRef = storageRef.child(baiViet.getImage());
         anhRef.delete();
         Intent intent1 = new Intent(ChinhSuaBaiViet.this, BaiVietNguoiDung.class);
@@ -151,5 +144,10 @@ public class ChinhSuaBaiViet extends XuLyBaiViet {
         Toast.makeText(this, "Xóa bài viết thành công", Toast.LENGTH_SHORT).show();
         finish();
     }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ChinhSuaBaiViet.this, BaiVietNguoiDung.class);
+        startActivity(intent);
+        finish();
+    }
 }
-

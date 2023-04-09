@@ -11,56 +11,48 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import thud.chiasebaiviet.R;
 import thud.chiasebaiviet.dulieu.BaiViet;
 import thud.chiasebaiviet.xuly.CustomGridViewAdapter;
 import thud.chiasebaiviet.xuly.FirebaseHelper;
 public class TrangChu extends AppCompatActivity {
-
     private GridView gridView;
     private CustomGridViewAdapter adapter;
     private List<BaiViet> baiVietList = new ArrayList<>();
     private boolean isLoggedIn = false;
+    private Button btnThemBaiViet;
+    private FirebaseHelper firebaseHelper;
     static final int MA_BNNGOAI = 1;
     static final int MA_CAMERA = 2;
     static String[] DSQUYEN_BNNGOAI =
             {Manifest.permission.READ_EXTERNAL_STORAGE};
     static String[] DSQUYEN_CAMERA = {Manifest.permission.CAMERA};
     boolean QUYEN_BNNGOAI = false, QUYEN_CAMERA = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trangchu);
-        //kiểm tra quyền truy cập vào camera và bộ nhớ
+        firebaseHelper = new FirebaseHelper();
+        // Kiểm tra quyền truy cập vào camera và bộ nhớ
         KiemTraQuyenTruyCap();
+        // Kiểm tra đăng nhập
         SharedPreferences preferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         isLoggedIn = preferences.contains("tenDangNhap") && preferences.contains("matKhau");
+        // Khởi tạo view
         gridView = findViewById(R.id.gridView);
-        Button btnThemBaiViet = findViewById(R.id.btnThemBaiViet);
-        if (isLoggedIn) {
-            btnThemBaiViet.setVisibility(View.VISIBLE);
-            btnThemBaiViet.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Mở màn hình thêm bài viết
-                    Intent intent = new Intent(TrangChu.this, ThemBaiViet.class);
-                    startActivity(intent);
-                    finish();
-                }
-            });
-        } else {
-            btnThemBaiViet.setVisibility(View.GONE);
-        }
+        btnThemBaiViet = findViewById(R.id.btnThemBaiViet);
+        btnThemBaiViet.setVisibility(View.GONE);
         // Lấy danh sách các bài viết từ CSDL
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        LayDanhSachBaiViet();
+    }
+
+    private void LayDanhSachBaiViet() {
         firebaseHelper.layDanhSachBaiViet(new FirebaseHelper.OnGetBaiVietSuccessListener() {
             @Override
             public void onGetBaiVietSuccess(List<BaiViet> listBaiViet) {
@@ -69,9 +61,10 @@ public class TrangChu extends AppCompatActivity {
                 gridView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
+
             @Override
             public void onGetBaiVietFailure(String errorMessage) {
-                // Xử lý khi lấy danh sách bài viết thất bại ở đây
+                Toast.makeText(TrangChu.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -170,7 +163,7 @@ public class TrangChu extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove("tenDangNhap");
         editor.remove("matKhau");
-        editor.remove("tenNguoiDung");
+        editor.remove("idNguoiDung");
         editor.apply();
         isLoggedIn = false;
         Intent intent = new Intent(TrangChu.this, TrangChu.class);

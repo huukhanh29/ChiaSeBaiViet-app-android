@@ -22,13 +22,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import thud.chiasebaiviet.R;
 
-
-public abstract class XuLyBaiViet extends AppCompatActivity {
+public abstract class QuanLyBaiViet extends AppCompatActivity {
     protected EditText edtNoidung;
     protected TextInputLayout layoutNoidung, layoutHinh;
     protected ImageView imgHinh;
@@ -57,7 +55,7 @@ public abstract class XuLyBaiViet extends AppCompatActivity {
                                     result.getData().getExtras().get("data");
                             imgHinh.setImageBitmap(bitmap);
                         } else
-                            Toast.makeText(XuLyBaiViet.this,
+                            Toast.makeText(QuanLyBaiViet.this,
                                     "Lỗi chụp hình!", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -79,7 +77,7 @@ public abstract class XuLyBaiViet extends AppCompatActivity {
                                 }
                             }
                         } else
-                            Toast.makeText(XuLyBaiViet.this, "Lỗi chọn hình!",
+                            Toast.makeText(QuanLyBaiViet.this, "Lỗi chọn hình!",
                                     Toast.LENGTH_LONG).show();
                     }
                 });
@@ -113,11 +111,5 @@ public abstract class XuLyBaiViet extends AppCompatActivity {
                     }
                 });
         pictureDialog.show();
-    }
-
-    public byte[] bitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
     }
 }
