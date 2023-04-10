@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -24,6 +25,10 @@ public class DangKy extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dangky);
+        // Tạo logo cho action bar
+        ActionBar myActionBar = getSupportActionBar();
+        myActionBar.setDisplayShowHomeEnabled(true);
+        myActionBar.setIcon(R.drawable.ic_gallery);
         firebaseHelper = new FirebaseHelper();
         // Ánh xạ các thành phần giao diện
         layoutTaiKhoan = findViewById(R.id.layout_taikhoan);
@@ -58,7 +63,7 @@ public class DangKy extends AppCompatActivity {
         } else {
             layoutTaiKhoan.setError(null);
         }
-        if (hoTen.isEmpty() || !hoTen.matches("[a-zA-Z ]+")) {
+        if (hoTen.isEmpty() || !hoTen.matches("[a-zA-Zà-ỹÀ-Ỹ ]+")) {
             layoutHoTen.setError(hoTen.isEmpty() ?
                     "Vui lòng nhập họ tên" : "Họ tên chỉ được chứa chữ cái và dấu cách");
             edtHoTen.requestFocus();
@@ -66,6 +71,7 @@ public class DangKy extends AppCompatActivity {
         } else {
             layoutHoTen.setError(null);
         }
+
         if (matKhau.isEmpty() ||
                 !matKhau.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,}$")) {
             layoutMatKhau.setError(matKhau.isEmpty() ?

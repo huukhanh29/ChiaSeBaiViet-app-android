@@ -17,6 +17,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -39,6 +40,10 @@ public abstract class QuanLyBaiViet extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.baiviet);
+        // Tạo logo cho action bar
+        ActionBar myActionBar = getSupportActionBar();
+        myActionBar.setDisplayShowHomeEnabled(true);
+        myActionBar.setIcon(R.drawable.ic_gallery);
         btnXoa = findViewById(R.id.btn_xoa);
         edtNoidung = findViewById(R.id.edt_ndbaiviet);
         imgHinh = findViewById(R.id.img_hinhanh);

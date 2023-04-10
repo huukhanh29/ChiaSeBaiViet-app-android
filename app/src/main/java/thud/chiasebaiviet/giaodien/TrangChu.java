@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import java.util.ArrayList;
@@ -39,6 +40,10 @@ public class TrangChu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trangchu);
         firebaseHelper = new FirebaseHelper();
+        // Tạo logo cho action bar
+        ActionBar myActionBar = getSupportActionBar();
+        myActionBar.setDisplayShowHomeEnabled(true);
+        myActionBar.setIcon(R.drawable.ic_gallery);
         // Kiểm tra quyền truy cập vào camera và bộ nhớ
         KiemTraQuyenTruyCap();
         // Kiểm tra đăng nhập
@@ -61,7 +66,6 @@ public class TrangChu extends AppCompatActivity {
                 gridView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
-
             @Override
             public void onGetBaiVietFailure(String errorMessage) {
                 Toast.makeText(TrangChu.this, errorMessage, Toast.LENGTH_SHORT).show();

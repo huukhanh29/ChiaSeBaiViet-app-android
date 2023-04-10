@@ -28,10 +28,11 @@ public class ThemBaiViet extends QuanLyBaiViet {
         if (!KiemTraBaiViet()) {
             return;
         }
-        // Lưu thông tin bài viết vào Firebase Database
-        LuuBaiVietVaoFirebase();
+
         // Lưu ảnh lên Firebase Storage
         String tenAnh = "anh_" + System.currentTimeMillis() + ".jpg";
+        // Lưu thông tin bài viết vào Firebase Database
+        LuuBaiVietVaoFirebase(tenAnh);
         LuuAnhLenFirebaseStorage(tenAnh);
     }
     private boolean KiemTraBaiViet() {
@@ -52,11 +53,10 @@ public class ThemBaiViet extends QuanLyBaiViet {
         }
         return true;
     }
-    private void LuuBaiVietVaoFirebase() {
+    private void LuuBaiVietVaoFirebase(String tenAnh) {
         SharedPreferences sharedPref = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         String idNguoiDung = sharedPref.getString("idNguoiDung", null);
         // Lưu tên ảnh vào cơ sở dữ liệu
-        String tenAnh = "anh_" + System.currentTimeMillis() + ".jpg";
         String maBv = "BV_" +System.currentTimeMillis();
         String nDung = edtNoidung.getText().toString().trim();
         BaiViet baiviet = new BaiViet(maBv, nDung, tenAnh, idNguoiDung);

@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -22,6 +24,10 @@ public class DangNhap extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dangnhap);
+        // Tạo logo cho action bar
+        ActionBar myActionBar = getSupportActionBar();
+        myActionBar.setDisplayShowHomeEnabled(true);
+        myActionBar.setIcon(R.drawable.ic_gallery);
         firebaseHelper = new FirebaseHelper();
         // Ánh xạ các thành phần giao diện
         layoutTaiKhoan = findViewById(R.id.layout_taikhoan);

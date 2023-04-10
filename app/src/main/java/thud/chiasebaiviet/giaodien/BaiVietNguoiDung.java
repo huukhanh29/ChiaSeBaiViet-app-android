@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,10 @@ public class BaiVietNguoiDung extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trangchu);
+        // Tạo logo cho action bar
+        ActionBar myActionBar = getSupportActionBar();
+        myActionBar.setDisplayShowHomeEnabled(true);
+        myActionBar.setIcon(R.drawable.ic_gallery);
         SharedPreferences preferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         isLoggedIn = preferences.contains("tenDangNhap") && preferences.contains("matKhau");
         KhoiTaoView();
