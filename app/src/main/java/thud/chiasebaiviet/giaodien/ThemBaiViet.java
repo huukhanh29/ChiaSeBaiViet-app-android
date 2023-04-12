@@ -28,7 +28,6 @@ public class ThemBaiViet extends QuanLyBaiViet {
         if (!KiemTraBaiViet()) {
             return;
         }
-
         // Lưu ảnh lên Firebase Storage
         String tenAnh = "anh_" + System.currentTimeMillis() + ".jpg";
         // Lưu thông tin bài viết vào Firebase Database
@@ -76,8 +75,9 @@ public class ThemBaiViet extends QuanLyBaiViet {
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(ThemBaiViet.this, "Lưu bài viết thành công!", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(ThemBaiViet.this, TrangChu.class);
+                    Intent intent = new Intent(ThemBaiViet.this, BaiVietNguoiDung.class);
                     startActivity(intent);
+                    bitmap = null;
                     finish();
                 } else {
                     Toast.makeText(ThemBaiViet.this, "Lỗi khi lưu ảnh!", Toast.LENGTH_LONG).show();

@@ -16,6 +16,7 @@ import thud.chiasebaiviet.R;
 import thud.chiasebaiviet.dulieu.BaiViet;
 import thud.chiasebaiviet.xuly.CustomGridViewAdapter;
 import thud.chiasebaiviet.xuly.FirebaseHelper;
+import thud.chiasebaiviet.xuly.Publics;
 
 public class BaiVietNguoiDung extends AppCompatActivity {
     private GridView gridView;
@@ -27,6 +28,11 @@ public class BaiVietNguoiDung extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trangchu);
+        //Kiểm tra Internet
+        if (Publics.hasInternet(this)) {
+            Toast.makeText(this, "Lỗi kết nối Internet!",
+                    Toast.LENGTH_LONG).show();
+        }
         // Tạo logo cho action bar
         ActionBar myActionBar = getSupportActionBar();
         myActionBar.setDisplayShowHomeEnabled(true);
@@ -99,7 +105,6 @@ public class BaiVietNguoiDung extends AppCompatActivity {
             finish();
         }
     }
-
     private void MoManHinhThemBaiViet() {
         // Mở màn hình thêm bài viết
         Intent intent = new Intent(BaiVietNguoiDung.this, ThemBaiViet.class);

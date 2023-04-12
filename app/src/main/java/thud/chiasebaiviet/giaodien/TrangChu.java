@@ -21,6 +21,8 @@ import thud.chiasebaiviet.R;
 import thud.chiasebaiviet.dulieu.BaiViet;
 import thud.chiasebaiviet.xuly.CustomGridViewAdapter;
 import thud.chiasebaiviet.xuly.FirebaseHelper;
+import thud.chiasebaiviet.xuly.Publics;
+
 public class TrangChu extends AppCompatActivity {
     private GridView gridView;
     private CustomGridViewAdapter adapter;
@@ -49,6 +51,11 @@ public class TrangChu extends AppCompatActivity {
         // Kiểm tra đăng nhập
         SharedPreferences preferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         isLoggedIn = preferences.contains("tenDangNhap") && preferences.contains("matKhau");
+        //Kiểm tra Internet
+        if (Publics.hasInternet(this)) {
+            Toast.makeText(this, "Lỗi kết nối Internet!",
+                    Toast.LENGTH_LONG).show();
+        }
         // Khởi tạo view
         gridView = findViewById(R.id.gridView);
         btnThemBaiViet = findViewById(R.id.btnThemBaiViet);

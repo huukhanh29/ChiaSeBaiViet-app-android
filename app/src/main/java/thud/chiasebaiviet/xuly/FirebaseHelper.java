@@ -1,6 +1,10 @@
 package thud.chiasebaiviet.xuly;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import androidx.annotation.NonNull;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -212,8 +216,6 @@ public class FirebaseHelper {
         });
     }
 
-
-
     public void layDanhSachBaiViet(final OnGetBaiVietSuccessListener listener) {
         mDatabase.child("BaiViet")
                 .orderByChild("maBv")
@@ -240,5 +242,7 @@ public class FirebaseHelper {
         void onGetBaiVietSuccess(List<BaiViet> listBaiViet);
         void onGetBaiVietFailure(String errorMessage);
     }
+
+
 }
 

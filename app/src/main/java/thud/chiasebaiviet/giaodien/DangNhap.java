@@ -10,10 +10,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import thud.chiasebaiviet.MainActivity;
+
 import thud.chiasebaiviet.R;
 import thud.chiasebaiviet.xuly.FirebaseHelper;
-import thud.chiasebaiviet.xuly.HashPassword;
+import thud.chiasebaiviet.xuly.Publics;
 
 public class DangNhap extends AppCompatActivity {
     TextInputLayout layoutTaiKhoan, layoutMatKhau;
@@ -34,16 +34,10 @@ public class DangNhap extends AppCompatActivity {
         layoutMatKhau = findViewById(R.id.layout_matkhau);
         edtTenDangNhap = findViewById(R.id.edt_taikhoan);
         edtMatKhau = findViewById(R.id.edt_matkhau);
-
-        // Lấy thông tin tài khoản đăng nhập từ SharedPreferences
-        SharedPreferences preferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
-        tenDangNhap = preferences.getString("tenDangNhap", null);
-        matKhau = preferences.getString("matKhau", null);
-
-        // Kiểm tra nếu đã lưu thông tin đăng nhập trong SharedPreferences, tự động đăng nhập
-        if (tenDangNhap != null && matKhau != null) {
-            //nếu có thông tin đã lưu thì chuyển đến trang chủ
-            XacThucDangNhap();
+        //Kiểm tra Internet
+        if (Publics.hasInternet(this)) {
+            Toast.makeText(this, "Lỗi kết nối Internet!",
+                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -70,7 +64,7 @@ public class DangNhap extends AppCompatActivity {
     }
 
     private void KiemTraThongTin(String tenDangNhap, String matKhau) {
-        firebaseHelper.ktDangNhap(tenDangNhap, HashPassword.hash(matKhau), new FirebaseHelper.OnCheckListener() {
+        firebaseHelper.ktDangNhap(tenDangNhap, Publics.hash(matKhau), new FirebaseHelper.OnCheckListener() {
             @Override
             public void onCheck(boolean exists) {
                 if (exists) {
@@ -95,7 +89,7 @@ public class DangNhap extends AppCompatActivity {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("idNguoiDung", key);
                 editor.putString("tenDangNhap", tenDangNhap);
-                editor.putString("matKhau", HashPassword.hash(matKhau));
+                editor.putString("matKhau", Publics.hash(matKhau));
                 editor.apply();
                 //đăng nhập thành công
                 XacThucDangNhap();

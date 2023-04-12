@@ -26,12 +26,13 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.io.IOException;
 
 import thud.chiasebaiviet.R;
+import thud.chiasebaiviet.xuly.Publics;
 
 public abstract class QuanLyBaiViet extends AppCompatActivity {
     protected EditText edtNoidung;
     protected TextInputLayout layoutNoidung, layoutHinh;
     protected ImageView imgHinh;
-    protected static Bitmap bitmap = null;
+    static Bitmap bitmap = null;
     protected Button btnXoa;
     protected ActivityResultLauncher<Intent> runCamera;
     protected ActivityResultLauncher<Intent> runGallery;
@@ -49,7 +50,11 @@ public abstract class QuanLyBaiViet extends AppCompatActivity {
         imgHinh = findViewById(R.id.img_hinhanh);
         layoutNoidung = findViewById(R.id.layout_ndbaiviet);
         layoutHinh = findViewById(R.id.layout_hinhanh);
-
+        //Kiểm tra Internet
+        if (Publics.hasInternet(this)) {
+            Toast.makeText(this, "Lỗi kết nối Internet!",
+                    Toast.LENGTH_LONG).show();
+        }
         runCamera = registerForActivityResult(new
                         ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {

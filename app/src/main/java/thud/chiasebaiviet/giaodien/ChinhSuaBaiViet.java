@@ -126,7 +126,7 @@ public class ChinhSuaBaiViet extends QuanLyBaiViet {
         BaiViet baiviet = new BaiViet(baiViet.getMaBv(), nDung, tenAnh, idNguoiDung);
         firebaseHelper.updateBaiViet(keyBv, baiviet);
 
-        Intent intent = new Intent(ChinhSuaBaiViet.this, TrangChu.class);
+        Intent intent = new Intent(ChinhSuaBaiViet.this, BaiVietNguoiDung.class);
         startActivity(intent);
         Toast.makeText(ChinhSuaBaiViet.this, "Lưu bài viết thành công!", Toast.LENGTH_LONG).show();
         finish();

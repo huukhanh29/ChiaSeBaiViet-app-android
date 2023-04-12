@@ -14,7 +14,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import thud.chiasebaiviet.R;
 import thud.chiasebaiviet.dulieu.NguoiDung;
 import thud.chiasebaiviet.xuly.FirebaseHelper;
-import thud.chiasebaiviet.xuly.HashPassword;
+import thud.chiasebaiviet.xuly.Publics;
 
 
 public class DangKy extends AppCompatActivity {
@@ -30,6 +30,11 @@ public class DangKy extends AppCompatActivity {
         myActionBar.setDisplayShowHomeEnabled(true);
         myActionBar.setIcon(R.drawable.ic_gallery);
         firebaseHelper = new FirebaseHelper();
+        //Kiểm tra Internet
+        if (Publics.hasInternet(this)) {
+            Toast.makeText(this, "Lỗi kết nối Internet!",
+                    Toast.LENGTH_LONG).show();
+        }
         // Ánh xạ các thành phần giao diện
         layoutTaiKhoan = findViewById(R.id.layout_taikhoan);
         layoutHoTen = findViewById(R.id.layout_hoten);
@@ -111,7 +116,7 @@ public class DangKy extends AppCompatActivity {
         String tenDangNhap = edtTenDangNhap.getText().toString().trim();
         String matKhau = edtMatKhau.getText().toString().trim();
         String hoTen = edtHoTen.getText().toString().trim();
-        String hashedPassword = HashPassword.hash(matKhau);
+        String hashedPassword = Publics.hash(matKhau);
         NguoiDung nguoiDung = new NguoiDung(tenDangNhap, hoTen, hashedPassword);
         firebaseHelper.addNguoiDung(nguoiDung);
         Intent intent = new Intent(DangKy.this, DangNhap.class);
